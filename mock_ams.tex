@@ -1,0 +1,196 @@
+\documentclass{beamer}
+
+\usepackage{my_macros}
+\usepackage{amssymb,amsthm,amsmath}
+\usepackage{enumerate}
+\usepackage{tikz-cd}
+
+\theoremstyle{definition}
+\newtheorem{defn}{Definition}
+%\newtheorem{example}{Example}
+
+\newcommand{\GL}{\operatorname{GL}}
+\newcommand{\FF}{\mathbb{F}}
+\newcommand{\Ext}{\operatorname{Ext}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\spec}{\operatorname{Spec}}
+
+
+\begin{document}
+
+\title{Representation Theory via Geometry}
+\author{Andrew Maurer}
+\date{Summer 2017}
+
+\frame{\titlepage}
+
+\begin{frame}{Overview}
+  \pause
+  \begin{enumerate}
+  \item Algebra \pause
+    \begin{itemize}
+    \item $G$-modules \pause
+    \item Cohomology groups of a $G$-module \pause
+    \item Ring structure\pause
+    \item $G$-modules $\rightsquigarrow$ $H^\bullet(G;k)$-modules \pause
+    \end{itemize}
+  \item Geometry
+    \begin{itemize}
+    \item $G$ defines a variety, and $G$-modules define subvarieties \pause
+    \item Operations on $G$-modules vs. operations on varieties \pause
+    \item Realizability 
+    \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Conventions}
+  \pause
+  \begin{itemize}
+  \item All groups will be finite, usually denoted $G$.\pause
+  \item $k$ will denote a field which is:\pause
+    \begin{itemize}
+    \item of characteristic $p \mid |G|$\pause
+    \item algebraically closed\pause
+    \end{itemize}
+  \item $M$ will be a $G$-module.\pause
+  \item $\spec(R)$ refers to the maximal ideal spectrum of the ring $R$.\pause
+  \end{itemize}
+\end{frame}
+
+\section{Algebra}
+
+\begin{frame}{Finite groups}\pause
+  Recall that a finite group is a finite set $G$ with a multiplication rule satisfying some axioms that make it behave like symmetry.\pause
+  \begin{itemize}
+  \item $\GL(V)$ = all linear isomorphisms of a vector space $V/\FF_q$.\pause
+  \item $S_n$ = all bijections $\{1,2,\ldots,n\} \to \{1,2,\ldots,n\}$.\pause
+  \item $(\ZZ/p)^r$ = elementary Abelian group of rank $r$.\pause
+  \item Others
+  \end{itemize}
+  
+\end{frame}
+
+\begin{frame}{Modules}\pause
+  Groups are modelled on symmetries. A \textbf{$G$-module} is just a vector space where $G$ acts as symmetries, i.e., linear automorphisms.\pause
+
+  \vspace{0.2in}
+  Namely, there's a map \[
+    \varphi : G \to \GL(V), g \mapsto \varphi_g
+  \]
+\pause
+  Examples:\pause
+  \begin{itemize}
+  \item $V$ is a $\GL(V)$ module.\pause
+  \item The vector space with basis $\{e_1,\ldots,e_n\}$ is a $S_n$-module by $\varphi_\sigma(e_i) = e_{\sigma(i)}$, and extend by linearity.\pause
+  \item $k$ is a $G$-module via the trivial action $\varphi_g(v) = v$.\pause
+  \end{itemize}
+  {\color{red} $G$-modules as defined above are really just modules for a certain ring denoted $kG$.}
+\end{frame}
+
+\begin{frame}{Cohomology groups are $\Ext$ groups}\pause
+  The cohomology group $H^n(G;k)$ can be defined in many ways.\pause
+
+  At the end of the day, the most concrete way to realize $H^n(G;M)$ is as $\Ext^n_{kG}(k,M)$.
+  \[
+\Ext_{kG}^n(k,M) = \big\{ 0 \to M \to E_1 \to \ldots \to E_n \to k \to 0 \big\} / \sim
+  \]
+  e.g., as all $n$-fold extensions of $k$ by $M$, modulo a certain equivalence relation.\pause
+
+  Addition in the cohomology group corresponds to Baer sum of extensions.
+
+\end{frame}
+
+\begin{frame}{Yoneda splicing}\pause
+
+  Realizing cohomology groups $H^n(G;k)$ in this way means we can multiply two sequences together.
+  \[
+    \Ext^n_{kG}(k,k) \times \Ext^m_{kG}(k,k) \to \Ext^{m+n}_{kG}(k,k)
+  \]\pause
+  \[
+    \begin{tikzcd}[ampersand replacement=\&]
+      \ldots \arrow[r] \& E_n \arrow[r] \arrow[drr,dashed] \& k \arrow[d,equals]\arrow[r] \& 0  \\
+      \& 0 \arrow[r] \& k \arrow[r] \&  F_1 \arrow[r] \& \ldots 
+    \end{tikzcd}
+  \]\pause
+  And the new sequence has the form
+  \[
+    0 \to k \to \underbrace{E_1 \to \ldots \to E_n \to F_1 \to \ldots \to F_m}_{m+n} \to k \to 0
+  \]
+  
+\end{frame}
+
+\begin{frame}{$H^\bullet(G;k) = \Ext^\bullet_{kG}(k,k)$ is a ring}\pause
+  Under this $\Ext^n_{kG}(k,k) \times \Ext^m_{kG}(k,k) \to \Ext^{n+m}_{kG}(k,k)$ association, \[
+    \Ext^\bullet_{kG}(k,k) = \bigoplus \Ext^n_{kG}(k,k)
+  \]
+  becomes a graded ring. \pause What can we say about it? \pause
+  \begin{itemize}
+  \item It is \emph{graded-commutative}, i.e., $\alpha \cdot \beta = (-1)^{\bar \alpha \cdot \bar \beta} \beta \cdot \alpha$.\pause
+  \item (Evens 1961) It is finitely-generated over $k$.\pause
+  \end{itemize}
+  Define a commutative, finitely generated ring:
+  \[
+    H^c(G;k) = \begin{cases}
+      H^\bullet(G;k) &\text{ if } p = 2 \\
+      \bigoplus H^{2n}(G;k) &\text{ if } p > 2
+      \end{cases}
+   \] 
+  
+ \end{frame}
+
+  \begin{frame}{One more thing about rings}\pause
+   $\Ext^\bullet_{kG}(M,M)$ is a ring in the exact same way.\pause
+
+   \vspace{0.2in}
+   $\Ext^\bullet_{kG}(M,M)$ is a graded module for $H^\bullet(G;k)$ (or $H^c(G;k)$) using the tensor product.\pause
+
+   \vspace{0.2in}
+   So $\Ext^\bullet_{kG}(M,M)$ has an annihilator $I_M \trianglelefteq H^\bullet(G;k)$ which is a homogeneous ideal.
+ \end{frame}
+
+ \section{Geometry}
+
+ \begin{frame}{Algebra $\rightsquigarrow$ Geometry}\pause
+   We have a commutative, finitely generated $k$-algebra $H^c(G;k)$ which captures the representation theory of $G$ in some way, and a way to associate ideals to $G$-modules.\pause
+
+   \vspace{0.2in}
+   What information is present in the affine variety $V_G(k) = H^\bullet(G;k)$ and its conical subvarieties $V_G(M) = Z(I_M) \subseteq V_G(k)$?\pause
+
+   \vspace{0.2in}
+   \begin{theorem}
+     $V_G(M) = \{0\}$ if and only if $M$ is projective. \pause
+   \end{theorem}
+ \end{frame}
+
+ \begin{frame}{Operations on modules and varieties} \pause
+   \begin{theorem}
+     \begin{enumerate}
+     \item $V_G(M_1 \oplus M_2) = V_G(M_1) \cup V_G(M_2)$ \pause
+     \item $V_G(M_1 \otimes M_2) = V_G(M_1) \cap V_G(M_2)$ \pause
+     \item $V_G(M^*) = V_G(M)$ \pause
+     \end{enumerate}
+   \end{theorem}
+
+   How are these proved? \pause Main techinique is by writing
+   \[
+V_G(M) = \bigcup_{\substack{E \leq G \\ \text{elem}}} \varphi_E ( V_E(M))
+\]
+$\varphi_E$ is a natural map obtained by thinking of $M$ as an $E$-module.
+\pause
+\vspace{0.2in}
+Modules $L_\zeta$ so that $V_G(L_\zeta) = Z(\zeta)$, where $\zeta \in H^\bullet(G;k)$.
+\end{frame}
+
+\begin{frame}{Realizability}
+\pause
+  \begin{theorem}
+    Every conical subvariety arises as $V_G(M)$ for some module $M$.
+  \end{theorem}
+\pause
+  \vspace{0.4in}
+  \begin{theorem}
+    If $V_G(M) = V_1 \cup V_2$ with $V_1 \cap V_2 = \{0\}$, then there exist modules $M_1$ and $M_2$ with $V_G(M_1) = V_1$ and $V_G(M_2) = V_2$.
+  \end{theorem}
+  
+\end{frame}
+\end{document}
